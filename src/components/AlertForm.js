@@ -3,6 +3,7 @@ import { generateRoomCode } from "../constant";
 import axios from "axios";
 import { useAuthcontext } from "../Contexts/AuthContext";
 import { useAppContext } from "../Contexts/AppContext";
+import { NODE_API_ENDPOINT } from "../utils/utils";
 
 const AlertForm = ({ onClose }) => {
   const [inputValue, setInputValue] = useState("");
@@ -24,7 +25,7 @@ const AlertForm = ({ onClose }) => {
     console.log(newCode, TheatorUser?.username);
     axios
       .post(
-        "/api/room/update",
+        `${NODE_API_ENDPOINT}/api/room/update`,
         {
           room: newCode,
           username: TheatorUser.username,
@@ -56,7 +57,7 @@ const AlertForm = ({ onClose }) => {
     const newCode = generateRoomCode();
     axios
       .post(
-        "api/room/update",
+        `${NODE_API_ENDPOINT}/api/room/update`,
         {
           room: newCode,
           username: TheatorUser.username,

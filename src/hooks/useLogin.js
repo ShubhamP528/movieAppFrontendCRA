@@ -3,6 +3,7 @@ import { useAuthcontext } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAppContext } from "../Contexts/AppContext";
+import { NODE_API_ENDPOINT } from "../utils/utils";
 
 export const useSignin = () => {
   const [errorL, setErrorL] = useState(null);
@@ -16,7 +17,7 @@ export const useSignin = () => {
     setIsLoadingL(true);
     setErrorL(null);
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(`${NODE_API_ENDPOINT}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

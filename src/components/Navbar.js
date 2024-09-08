@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 
 import logo from "../Assets/Images/movieLogo.png";
 import PlayByLinkForm from "./PlayByLinkForm";
+import { NODE_API_ENDPOINT } from "../utils/utils";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +42,7 @@ const Navbar = () => {
     if (room) {
       try {
         const data = await axios.post(
-          "/api/getVideoId",
+          `${NODE_API_ENDPOINT}/api/getVideoId`,
           {
             room: room,
           },

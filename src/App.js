@@ -8,12 +8,13 @@ import Footer from "./components/Footer";
 import { AppContextProvider } from "./Contexts/AppContext";
 
 import axios from "axios";
+import { NODE_API_ENDPOINT } from "./utils/utils";
 
 const Applayout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/hii");
+        const response = await axios.get(`${NODE_API_ENDPOINT}/api/hii`);
         console.log(response);
         console.log("Data fetched successfully");
       } catch (error) {

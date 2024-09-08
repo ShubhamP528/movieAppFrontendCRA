@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
+import { NODE_API_ENDPOINT } from "../utils/utils";
 export const AuthContext = createContext();
 
 const authReducer = (state, action) => {
@@ -24,7 +25,7 @@ export const AuthContextProvider = ({ children }) => {
         const user = JSON.parse(localStorage.getItem("TheatorUser"));
         console.log(user);
         if (!user.token) throw new Error("No token found");
-        await fetch("/api/auth/verify", {
+        await fetch(`${NODE_API_ENDPOINT}/api/auth/verify`, {
           method: "POST",
           headers: { Authorization: `Bearer ${user.token}` },
         })
