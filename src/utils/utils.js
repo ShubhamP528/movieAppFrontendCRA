@@ -1,4 +1,4 @@
 export const NODE_API_ENDPOINT =
   process.env.NODE_ENV === "production"
-    ? "https://moviesappbackend.onrender.com"
+    ? "https://movies-app-backend-two.vercel.app"
     : "http://localhost:8080";
