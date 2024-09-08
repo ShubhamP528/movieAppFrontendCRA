@@ -1,6 +1,67 @@
+import { Helmet } from "react-helmet";
+
 const ContactUs = () => {
   return (
     <div className="bg-gray-100 min-h-screen py-16">
+      <Helmet>
+        <title>Contact Us - SyncMovie</title>
+        <meta
+          name="description"
+          content="Have questions? Contact SyncMovie to learn more about how we can help you watch movies online with friends."
+        />
+        <meta
+          name="keywords"
+          content="contact SyncMovie, support for online movie watching, synchronized playback support, contact movie platform"
+        />
+        <link
+          rel="canonical"
+          href="https://syncmovie-watch.netlify.app/contact"
+        />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Contact Us - SyncMovie" />
+        <meta
+          property="og:description"
+          content="Get in touch with SyncMovie for support or inquiries. We're here to help!"
+        />
+        <meta
+          property="og:url"
+          content="https://syncmovie-watch.netlify.app/contact"
+        />
+        <meta
+          property="og:image"
+          content="https://syncmovie-watch.netlify.app/static/contact-social-banner.png"
+        />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact Us - SyncMovie" />
+        <meta
+          name="twitter:description"
+          content="Reach out to the SyncMovie team for any support or help related to watching movies with friends."
+        />
+        <meta
+          name="twitter:image"
+          content="https://syncmovie-watch.netlify.app/static/contact-social-banner.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+        {
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "name": "Contact Us - SyncMovie",
+          "url": "https://syncmovie-watch.netlify.app/contact"
+        }
+      `}
+        </script>
+
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           Contact Us

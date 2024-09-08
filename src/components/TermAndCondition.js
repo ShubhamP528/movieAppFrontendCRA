@@ -1,8 +1,68 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const TermsAndConditions = () => {
   return (
     <div className="bg-gray-50 text-gray-700 py-10 px-4">
+      <Helmet>
+        <title>Terms and Conditions - SyncMovie</title>
+        <meta
+          name="description"
+          content="Read the terms and conditions for using SyncMovie. Understand our policies on privacy, user conduct, and more."
+        />
+        <meta
+          name="keywords"
+          content="SyncMovie terms, conditions, user agreement, privacy policy, usage policy"
+        />
+        <link
+          rel="canonical"
+          href="https://syncmovie-watch.netlify.app/term-and-conditions"
+        />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Terms and Conditions - SyncMovie" />
+        <meta
+          property="og:description"
+          content="Review SyncMovie's terms and conditions for users, including privacy and usage policies."
+        />
+        <meta
+          property="og:url"
+          content="https://syncmovie-watch.netlify.app/term-and-conditions"
+        />
+        <meta
+          property="og:image"
+          content="https://syncmovie-watch.netlify.app/static/terms-social-banner.png"
+        />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Terms and Conditions - SyncMovie" />
+        <meta
+          name="twitter:description"
+          content="Read SyncMovie's terms and conditions, which outline user policies, privacy, and general guidelines."
+        />
+        <meta
+          name="twitter:image"
+          content="https://syncmovie-watch.netlify.app/static/terms-social-banner.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+        {
+          "@context": "https://schema.org",
+          "@type": "TermsOfService",
+          "name": "Terms and Conditions - SyncMovie",
+          "url": "https://syncmovie-watch.netlify.app/term-and-conditions"
+        }
+      `}
+        </script>
+
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
       <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-lg p-8">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
           Terms and Conditions

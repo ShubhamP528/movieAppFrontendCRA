@@ -3,10 +3,11 @@ import axios from "axios";
 import VideoGrid from "./VideoGrid";
 import SearchBar from "./SearchBar";
 import SimarUI from "./SimarUI";
+import { Helmet } from "react-helmet";
 
 const Theator = () => {
   const [YtData, setYtData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("hindi song");
+  const [searchQuery, setSearchQuery] = useState("Hindi Song");
   const [pageToken, setPageToken] = useState(""); // Track the current page token
   const [totalResults, setTotalResults] = useState(0);
   const [loading, setLoading] = useState(true); // Initially set loading to true
@@ -55,7 +56,7 @@ const Theator = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&pageToken=${pageToken}&q=${searchQuery} song&key=AIzaSyDptw29QDvr3hBZxpnMOTUO-RPPQiGL0NQ`
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&pageToken=${pageToken}&q=${searchQuery}&key=AIzaSyDptw29QDvr3hBZxpnMOTUO-RPPQiGL0NQ`
       );
       setYtData(response.data.items);
       setTotalResults(response.data.pageInfo.totalResults);
@@ -83,6 +84,71 @@ const Theator = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Helmet>
+        <title>SyncMovie Theater - Watch Movies in Sync</title>
+        <meta
+          name="description"
+          content="Enjoy your own virtual movie theater with friends using SyncMovie's synchronized playback system."
+        />
+        <meta
+          name="keywords"
+          content="virtual movie theater, watch party platform, synchronized playback theater, online movie night"
+        />
+        <link
+          rel="canonical"
+          href="https://syncmovie-watch.netlify.app/theator"
+        />
+
+        {/* Open Graph Tags */}
+        <meta
+          property="og:title"
+          content="SyncMovie Theater - Watch Movies in Sync"
+        />
+        <meta
+          property="og:description"
+          content="Watch movies together online in your own virtual theater with SyncMovie's synchronized playback!"
+        />
+        <meta
+          property="og:url"
+          content="https://syncmovie-watch.netlify.app/theator"
+        />
+        <meta
+          property="og:image"
+          content="https://syncmovie-watch.netlify.app/static/theater-social-banner.png"
+        />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="SyncMovie Theater - Watch Movies in Sync"
+        />
+        <meta
+          name="twitter:description"
+          content="Enjoy synchronized movie playback with friends in a virtual theater on SyncMovie."
+        />
+        <meta
+          name="twitter:image"
+          content="https://syncmovie-watch.netlify.app/static/theater-social-banner.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+        {
+          "@context": "https://schema.org",
+          "@type": "MovieTheater",
+          "name": "SyncMovie Theater",
+          "url": "https://syncmovie-watch.netlify.app/theator"
+        }
+      `}
+        </script>
+
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
       <h1 className="text-3xl font-bold mb-4 text-center">
         YouTube Video Gallery
       </h1>

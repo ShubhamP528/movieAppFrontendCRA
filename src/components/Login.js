@@ -5,6 +5,7 @@ import { useSignin } from "../hooks/useLogin";
 import { css } from "@emotion/react";
 import { BeatLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
 
 const override = css`
   display: block;
@@ -17,6 +18,65 @@ const LoginForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>Login - SyncMovie</title>
+        <meta
+          name="description"
+          content="Login to SyncMovie and start watching movies with your friends online. Enjoy synchronized movie streaming and stay connected."
+        />
+        <meta
+          name="keywords"
+          content="SyncMovie login, online movie platform login, watch movies with friends, synchronized movie streaming login"
+        />
+        <link
+          rel="canonical"
+          href="https://syncmovie-watch.netlify.app/login"
+        />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Login - SyncMovie" />
+        <meta
+          property="og:description"
+          content="Login to SyncMovie and watch movies together with friends in sync. Get access to your personal movie theater."
+        />
+        <meta
+          property="og:url"
+          content="https://syncmovie-watch.netlify.app/login"
+        />
+        <meta
+          property="og:image"
+          content="https://syncmovie-watch.netlify.app/static/login-social-banner.png"
+        />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Login - SyncMovie" />
+        <meta
+          name="twitter:description"
+          content="Sign in to SyncMovie and start enjoying movies with synchronized playback online with friends."
+        />
+        <meta
+          name="twitter:image"
+          content="https://syncmovie-watch.netlify.app/static/login-social-banner.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+        {
+          "@context": "https://schema.org",
+          "@type": "LoginPage",
+          "name": "Login - SyncMovie",
+          "url": "https://syncmovie-watch.netlify.app/login"
+        }
+      `}
+        </script>
+
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

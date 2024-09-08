@@ -5,6 +5,7 @@ import { useSignup } from "../hooks/useSignup";
 import { css } from "@emotion/react";
 import { BeatLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
 
 const override = css`
   display: block;
@@ -17,6 +18,65 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>Sign Up - SyncMovie</title>
+        <meta
+          name="description"
+          content="Create a free account on SyncMovie to enjoy synchronized movie watching with friends online. Sign up today to start streaming!"
+        />
+        <meta
+          name="keywords"
+          content="SyncMovie signup, create account, watch movies with friends, online movie platform registration"
+        />
+        <link
+          rel="canonical"
+          href="https://syncmovie-watch.netlify.app/signup"
+        />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Sign Up - SyncMovie" />
+        <meta
+          property="og:description"
+          content="Join SyncMovie by signing up and start watching synchronized movies with friends from anywhere."
+        />
+        <meta
+          property="og:url"
+          content="https://syncmovie-watch.netlify.app/signup"
+        />
+        <meta
+          property="og:image"
+          content="https://syncmovie-watch.netlify.app/static/signup-social-banner.png"
+        />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sign Up - SyncMovie" />
+        <meta
+          name="twitter:description"
+          content="Sign up for SyncMovie and create your own movie nights with synchronized playback online."
+        />
+        <meta
+          name="twitter:image"
+          content="https://syncmovie-watch.netlify.app/static/signup-social-banner.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+        {
+          "@context": "https://schema.org",
+          "@type": "RegisterAction",
+          "name": "Sign Up - SyncMovie",
+          "url": "https://syncmovie-watch.netlify.app/signup"
+        }
+      `}
+        </script>
+
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

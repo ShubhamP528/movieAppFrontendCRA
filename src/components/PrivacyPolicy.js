@@ -1,8 +1,68 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6 lg:p-12 ">
+      <Helmet>
+        <title>Privacy Policy - SyncMovie</title>
+        <meta
+          name="description"
+          content="Read SyncMovie's privacy policy to understand how we protect your data and use information on our platform."
+        />
+        <meta
+          name="keywords"
+          content="SyncMovie privacy policy, data protection, user privacy, information usage, GDPR compliance"
+        />
+        <link
+          rel="canonical"
+          href="https://syncmovie-watch.netlify.app/privacy-policy"
+        />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Privacy Policy - SyncMovie" />
+        <meta
+          property="og:description"
+          content="SyncMovie takes your privacy seriously. Read our privacy policy to learn more about how we protect your data."
+        />
+        <meta
+          property="og:url"
+          content="https://syncmovie-watch.netlify.app/privacy-policy"
+        />
+        <meta
+          property="og:image"
+          content="https://syncmovie-watch.netlify.app/static/privacy-policy-social-banner.png"
+        />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Privacy Policy - SyncMovie" />
+        <meta
+          name="twitter:description"
+          content="Understand SyncMovie's privacy practices, including how your personal information is collected, used, and protected."
+        />
+        <meta
+          name="twitter:image"
+          content="https://syncmovie-watch.netlify.app/static/privacy-policy-social-banner.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+        {
+          "@context": "https://schema.org",
+          "@type": "PrivacyPolicy",
+          "name": "Privacy Policy - SyncMovie",
+          "url": "https://syncmovie-watch.netlify.app/privacy-policy"
+        }
+      `}
+        </script>
+
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
       <div className="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <h1 className="text-2xl font-semibold text-gray-900 mb-4">
           Privacy Policy

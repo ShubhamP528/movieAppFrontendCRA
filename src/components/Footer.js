@@ -10,7 +10,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="text-white">
             <h3 className="text-lg font-semibold mb-2">
-              Software Software Pvt Ltd
+              Software Solution Pvt Ltd
             </h3>
             <p className="text-sm mb-1">
               Rudrapur, Udham Singh Nagar, Uttarakhand, IN
@@ -61,24 +61,28 @@ const Footer = () => {
           <div className="flex justify-center items-center md:justify-end md:mr-8">
             <div className="flex space-x-4">
               <Link
+                target="_blank"
                 to="https://github.com/ShubhamP528"
                 className="text-white hover:text-gray-400 transition duration-300"
               >
                 <i className="fab fa-github"></i>
               </Link>
               <Link
+                target="_blank"
                 to="https://x.com/@Shubham14481056"
                 className="text-white hover:text-gray-400 transition duration-300"
               >
                 <i className="fab fa-twitter"></i>
               </Link>
               <Link
-                to="https://www.linkedin.com/in/shubham-prajapati-a3b635228/"
+                target="_blank"
+                to="https://www.instagram.com/attitude_boy_shu_bham/"
                 className="text-white hover:text-gray-400 transition duration-300"
               >
                 <i className="fab fa-instagram"></i>
               </Link>
               <Link
+                target="_blank"
                 to="https://www.linkedin.com/in/shubham-prajapati-a3b635228/"
                 className="text-white hover:text-gray-400 transition duration-300"
               >

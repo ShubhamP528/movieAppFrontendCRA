@@ -1,8 +1,68 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const About = () => {
   return (
     <div className="bg-gray-100 min-h-screen py-16">
+      <Helmet>
+        <title>About Us - SyncMovie</title>
+        <meta
+          name="description"
+          content="Learn more about SyncMovie, the platform designed to bring friends and family closer through synchronized movie watching online."
+        />
+        <meta
+          name="keywords"
+          content="about SyncMovie, watch movies online with friends, synchronized movie watching, group streaming"
+        />
+        <link
+          rel="canonical"
+          href="https://syncmovie-watch.netlify.app/about"
+        />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="About Us - SyncMovie" />
+        <meta
+          property="og:description"
+          content="SyncMovie is a platform for group movie watching with synchronized playback. Learn more about our mission to connect people!"
+        />
+        <meta
+          property="og:url"
+          content="https://syncmovie-watch.netlify.app/about"
+        />
+        <meta
+          property="og:image"
+          content="https://syncmovie-watch.netlify.app/static/about-social-banner.png"
+        />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Us - SyncMovie" />
+        <meta
+          name="twitter:description"
+          content="SyncMovie helps people enjoy watching movies together from different locations. Learn about our journey and goals."
+        />
+        <meta
+          name="twitter:image"
+          content="https://syncmovie-watch.netlify.app/static/about-social-banner.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+        {
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          "name": "About Us - SyncMovie",
+          "url": "https://syncmovie-watch.netlify.app/about"
+        }
+      `}
+        </script>
+
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           Our Story
