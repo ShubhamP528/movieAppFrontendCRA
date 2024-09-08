@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+// import ReactDOM from "react-dom/client";
+import NavBar from "./components/Navbar";
+import { Outlet } from "react-router-dom";
+import { AuthContextProvider } from "./Contexts/AuthContext";
+import { Toaster } from "react-hot-toast";
+import Footer from "./components/Footer";
+import { AppContextProvider } from "./Contexts/AppContext";
 
-function App() {
+import axios from "axios";
+
+const Applayout = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/hii");
+        console.log(response);
+        console.log("Data fetched successfully");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    // Fetch data initially
+    fetchData();
+
+    // Fetch data every 10 minutes
+    const interval = setInterval(fetchData, 1 * 60 * 1000);
+
+    // Cleanup function to clear interval
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array ensures this effect runs only once
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContextProvider>
+      <AppContextProvider>
+        <React.Fragment>
+          <NavBar />
+          <Outlet />
+          {/* <Temp /> */}
+          <Footer />
+          <Toaster />
+        </React.Fragment>
+      </AppContextProvider>
+    </AuthContextProvider>
   );
-}
+};
 
-export default App;
+export default Applayout;
