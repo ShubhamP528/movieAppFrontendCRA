@@ -4,7 +4,7 @@ import io from "socket.io-client";
 // const socket = io("https://moviesappbackend-1.onrender.com"); // Adjust this to your server's address
 const socket = io(
   process.env.NODE_ENV === "production"
-    ? "https://movies-app-backend-two.vercel.app"
+    ? "https://moviesappbackend.onrender.com"
     : "http://localhost:8080"
 ); // Adjust this to your server's address
 // const socket = io("https://moviesappbackend.onrender.com"); // Adjust this to your server's address
