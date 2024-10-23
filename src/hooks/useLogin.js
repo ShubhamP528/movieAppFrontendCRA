@@ -13,14 +13,14 @@ export const useSignin = () => {
 
   const navigate = useNavigate();
 
-  const signin = async (username, password) => {
+  const signin = async (email, password) => {
     setIsLoadingL(true);
     setErrorL(null);
     try {
       const response = await fetch(`${NODE_API_ENDPOINT}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const json = await response.json();

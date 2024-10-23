@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useAuthcontext } from "../Contexts/AuthContext";
+import toast from "react-hot-toast";
+import { useAppContext } from "../Contexts/AppContext";
 
 const images = [
   "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -13,6 +16,95 @@ const images = [
 ];
 
 const Home = () => {
+  const [user, setUser] = useState(null);
+  const { dispatch } = useAuthcontext();
+  const { setRoom } = useAppContext();
+
+  // Handle the redirect from Google OAuth
+  useEffect(() => {
+    const getUserDataFromBackend = async () => {
+      try {
+        const queryParams = new URLSearchParams(window.location.search);
+        const token = queryParams.get("token");
+        const room = queryParams.get("room");
+        const name = queryParams.get("name");
+        const email = queryParams.get("email");
+        const profilePicture = queryParams.get("profilePicture");
+
+        if (room === "") {
+          console.log("room is here ", typeof room);
+        }
+
+        console.log(token, room, name);
+
+        if (token && (room || room === "") && name && email && profilePicture) {
+          // Store the token in localStorage
+          // Set user info in state
+          setUser({
+            room,
+            name,
+            token,
+            email,
+            profilePicture,
+          });
+
+          console.log("Mai yaha hu");
+
+          // dispatch(
+          //   login({
+          //     email,
+          //     name,
+          //     userId,
+          //     token,
+          //   })
+          // );
+
+          // toast.success("Successfully login");
+          // update the auth context
+          console.log("LOGIN HO RAHA HAI");
+          localStorage.setItem(
+            "TheatorUser",
+            JSON.stringify({
+              room,
+              name,
+              token,
+              email,
+              profilePicture,
+            })
+          );
+
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              room,
+              name,
+              token,
+              email,
+              profilePicture,
+            },
+          });
+          setRoom(room);
+
+          // localStorage.setItem(
+          //   "TheatorUser",
+          //   JSON.stringify({
+          //     room,
+          //     name,
+          //     token,
+          //   })
+          // );
+
+          // Clear query string from URL
+          window.history.replaceState(null, "", window.location.pathname);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUserDataFromBackend();
+  }, []);
+
   return (
     <div className="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 min-h-screen text-white py-16">
       <Helmet>

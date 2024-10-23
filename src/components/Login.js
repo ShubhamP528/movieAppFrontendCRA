@@ -6,6 +6,7 @@ import { css } from "@emotion/react";
 import { BeatLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
+import { NODE_API_ENDPOINT } from "../utils/utils";
 
 const override = css`
   display: block;
@@ -15,6 +16,10 @@ const override = css`
 
 const LoginForm = () => {
   const { signin, isLoadingL, errorL } = useSignin();
+
+  const handleGoogleSignup = () => {
+    window.open(`${NODE_API_ENDPOINT}/api/googleAuth/auth/google`, "_self"); // Redirect to your Google Auth route
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -84,13 +89,13 @@ const LoginForm = () => {
           </h2>
         </div>
         <Formik
-          initialValues={{ username: "", password: "" }}
+          initialValues={{ email: "", password: "" }}
           validationSchema={Yup.object({
-            username: Yup.string().required("Required"),
+            email: Yup.string().required("Required"),
             password: Yup.string().required("Required"),
           })}
           onSubmit={(values, { setSubmitting, resetForm }) => {
-            signin(values.username.trim(), values.password.trim());
+            signin(values.email.trim(), values.password.trim());
             if (errorL) {
               // toast.error(errorL);
               console.log(errorL);
@@ -103,17 +108,17 @@ const LoginForm = () => {
             <Form className="mt-8 space-y-6">
               <div className="rounded-md shadow-sm -space-y-px">
                 <div>
-                  <label htmlFor="username" className="sr-only">
-                    Username
+                  <label htmlFor="email" className="sr-only">
+                    email
                   </label>
                   <Field
                     type="text"
-                    name="username"
+                    name="email"
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    placeholder="Username"
+                    placeholder="email"
                   />
                   <ErrorMessage
-                    name="username"
+                    name="email"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -174,6 +179,29 @@ const LoginForm = () => {
             </Form>
           )}
         </Formik>
+        <div className="flex justify-center space-x-4 ">
+          {/* <button className="bg-blue-600 text-white p-2 rounded-full focus:outline-none">
+              <FaFacebookF />
+            </button>
+            <button className="bg-blue-400 text-white p-2 rounded-full focus:outline-none">
+              <FaTwitter />
+            </button>
+            <button className="bg-red-500 text-white p-2 rounded-full focus:outline-none">
+              <FaGoogle onClick={handleGoogleSignup} />
+            </button> */}
+          <button
+            class="w-full px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150"
+            onClick={handleGoogleSignup}
+          >
+            <img
+              class="w- h-6"
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              loading="lazy"
+              alt="google logo"
+            />
+            <span className="text-center">Log in with Google</span>
+          </button>{" "}
+        </div>
       </div>
     </div>
   );

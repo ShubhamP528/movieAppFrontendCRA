@@ -22,12 +22,17 @@ const PlayByLinkForm = ({ onClose }) => {
     // For example, you can submit the input value to a backend endpoint
     console.log("Submitted value:", inputValue);
 
+    if (room === "") {
+      toast.error("Please select a room");
+      return;
+    }
+
     const videoId = extractYouTubeVideoId(inputValue);
     if (videoId === null) {
       toast.error("Please enter valid link");
       return;
     }
-    console.log(videoId, TheatorUser?.username);
+    console.log(videoId, TheatorUser?.name);
     navigate(`/video/${videoId}/${room}`);
     // Close the alert form
     onClose();

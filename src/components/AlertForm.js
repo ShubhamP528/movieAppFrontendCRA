@@ -22,13 +22,12 @@ const AlertForm = ({ onClose }) => {
     console.log("Submitted value:", inputValue);
 
     const newCode = inputValue.trim();
-    console.log(newCode, TheatorUser?.username);
+    console.log(newCode, TheatorUser?.name);
     axios
       .post(
         `${NODE_API_ENDPOINT}/api/room/update`,
         {
           room: newCode,
-          username: TheatorUser.username,
         },
         {
           headers: {
@@ -53,14 +52,13 @@ const AlertForm = ({ onClose }) => {
   };
 
   const NewRoomCode = async () => {
-    console.log(TheatorUser.username);
+    console.log(TheatorUser.name);
     const newCode = generateRoomCode();
     axios
       .post(
         `${NODE_API_ENDPOINT}/api/room/update`,
         {
           room: newCode,
-          username: TheatorUser.username,
         },
         {
           headers: {

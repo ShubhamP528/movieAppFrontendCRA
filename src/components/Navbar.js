@@ -122,7 +122,7 @@ const Navbar = () => {
                   <PlayByLinkForm onClose={handleCloseLinkForm} />
                 )}
                 <span className="text-gray-300 font-medium">
-                  Welcome, {TheatorUser.username}!
+                  Welcome, {TheatorUser.name}!
                 </span>
                 <span className="text-gray-300 font-medium">
                   Room:{" "}
@@ -239,7 +239,7 @@ const Navbar = () => {
               </button>
               {showLinkForm && <PlayByLinkForm onClose={handleCloseLinkForm} />}
               <span className="block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">
-                Welcome, {TheatorUser.username}!
+                Welcome, {TheatorUser.name}!
               </span>
               <span className="text-gray-300 font-medium px-3 py-2">
                 Room:

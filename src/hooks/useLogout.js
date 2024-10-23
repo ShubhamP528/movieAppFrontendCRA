@@ -2,11 +2,12 @@
 import { useAppContext } from "../Contexts/AppContext";
 import { useAuthcontext } from "../Contexts/AuthContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const useLogout = () => {
   const { dispatch } = useAuthcontext();
   const { setRoom } = useAppContext();
-  // const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const logout = () => {
     // remove user form local storage
@@ -17,7 +18,7 @@ export const useLogout = () => {
     // dispatch logout action
     dispatch({ type: "LOGOUT" });
     setRoom("");
-    // navigate('/home')
+    navigate("/");
   };
 
   return { logout };

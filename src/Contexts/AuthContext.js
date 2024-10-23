@@ -3,9 +3,13 @@ import { NODE_API_ENDPOINT } from "../utils/utils";
 export const AuthContext = createContext();
 
 const authReducer = (state, action) => {
+  console.log(action.payload);
+
   switch (action.type) {
     case "LOGIN":
-      return { TheatorUser: action.payload };
+      return {
+        TheatorUser: action.payload,
+      };
     case "LOGOUT":
       return { TheatorUser: null };
     default:
@@ -27,7 +31,7 @@ export const AuthContextProvider = ({ children }) => {
         if (!user.token) throw new Error("No token found");
         await fetch(`${NODE_API_ENDPOINT}/api/auth/verify`, {
           method: "POST",
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { Authorization: `Bearer ${user?.token}` },
         })
           .then((res) => res.json())
           .then((data) => {
