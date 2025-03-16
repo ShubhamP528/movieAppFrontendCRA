@@ -10,6 +10,8 @@ import { AppContextProvider } from "./Contexts/AppContext";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "./utils/utils";
 
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 const Applayout = () => {
   useEffect(() => {
     const fetchData = async () => {
@@ -33,17 +35,19 @@ const Applayout = () => {
   }, []); // Empty dependency array ensures this effect runs only once
 
   return (
-    <AuthContextProvider>
-      <AppContextProvider>
-        <React.Fragment>
-          <NavBar />
-          <Outlet />
-          {/* <Temp /> */}
-          <Footer />
-          <Toaster />
-        </React.Fragment>
-      </AppContextProvider>
-    </AuthContextProvider>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
+      <AuthContextProvider>
+        <AppContextProvider>
+          <React.Fragment>
+            <NavBar />
+            <Outlet />
+            {/* <Temp /> */}
+            <Footer />
+            <Toaster />
+          </React.Fragment>
+        </AppContextProvider>
+      </AuthContextProvider>
+    </GoogleOAuthProvider>
   );
 };
 

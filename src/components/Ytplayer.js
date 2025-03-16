@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuthcontext } from "../Contexts/AuthContext";
 import Chat from "./Chat";
 import YouTube from "react-youtube";
+import { useAppContext } from "../Contexts/AppContext";
 
 // const socket = io("https://moviesappbackend-1.onrender.com"); // Adjust this to your server's address
 // const socket = io("https://moviesappbackend.onrender.com"); // Adjust this to your server's address
@@ -14,12 +15,14 @@ function Ytplayer() {
   const { id, room } = useParams();
 
   const [sessionId, setSessionId] = useState(room);
-  const [videoId, setVideoId] = useState(id); // Sample YouTube video ID
+  // const [videoId, setVideoId] = useState(id); // Sample YouTube video ID
   const [player, setPlayer] = useState(null);
   const [host, setHost] = useState(null); // State to maintain the host
   const playerRef = useRef(null);
   const { TheatorUser } = useAuthcontext();
   const navigate = useNavigate();
+
+  const { videoId, setVideoId } = useAppContext();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("TheatorUser"));
@@ -27,7 +30,7 @@ function Ytplayer() {
     if (!user) {
       navigate("/login");
     }
-  }, [TheatorUser]);
+  }, [TheatorUser, navigate]);
 
   // useEffect(() => {
   //   navigate(`/video/${room}/${videoId}`);
@@ -65,7 +68,7 @@ function Ytplayer() {
   console.log(socket);
 
   useEffect(() => {
-    socket.emit("joinRoom", { sessionId, videoId }); // Send videoId along with sessionId
+    socket.emit("newuser", { sessionId, videoId }); // Send videoId along with sessionId
 
     socket.on("control", (data) => {
       if (player) {
@@ -172,6 +175,11 @@ function Ytplayer() {
       }
     });
 
+    socket.on("changePlaybackSpeed-ans", (rate) => {
+      console.log("Playback speed changed to: ", rate);
+      player?.setPlaybackRate(rate);
+    });
+
     return () => {
       socket.off("control");
       socket.off("newUserJoined");
@@ -179,8 +187,9 @@ function Ytplayer() {
       socket.off("currentState");
       socket.off("requestInitialPlaybackTime");
       socket.off("videoChange");
+      socket.off("changePlaybackSpeed-ans");
     };
-  }, [sessionId, player, videoId]);
+  }, [sessionId, player, videoId, setVideoId]);
 
   const onPlayerReady = (event) => {
     console.log("Player is ready:", event.target);
@@ -228,6 +237,15 @@ function Ytplayer() {
       rel: 0, // Do not show related videos on video end
     },
   };
+
+  const changePlaybackSpeed = (rate) => {
+    if (player) {
+      console.log(rate.data);
+      player.setPlaybackRate(rate.data); // Update the player's speed
+      socket.emit("changePlaybackSpeed", { sessionId, rate: rate.data }); // Notify others
+    }
+  };
+
   return (
     <div className="flex flex-col gap-16 md:flex-row h-fit">
       <div className="w-full md:w-2/4 h-96 md:h-full">
@@ -237,6 +255,7 @@ function Ytplayer() {
           onReady={onPlayerReady}
           onMute={onPlayerMuteChange}
           onUnmute={onPlayerMuteChange}
+          onPlaybackRateChange={changePlaybackSpeed}
           className="w-full h-full"
         />
         <div

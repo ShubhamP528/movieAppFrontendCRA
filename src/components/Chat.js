@@ -17,8 +17,8 @@ function Chat() {
     // Listen for incoming messages
     socket.on("receiveMessage", (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
-      if (TheatorUser.email !== msg.email) {
-        toast.success(`${msg.name}: ${msg.text}`);
+      if (TheatorUser?.email !== msg?.email) {
+        // toast.success(`${msg.name}: ${msg.text}`);
       }
     });
 
@@ -26,7 +26,7 @@ function Chat() {
     return () => {
       socket.off("receiveMessage");
     };
-  }, [TheatorUser?.name]);
+  }, [TheatorUser?.email, TheatorUser?.name]);
 
   // Scroll to the bottom of the chat messages container when messages are updated
   useEffect(() => {
@@ -39,8 +39,8 @@ function Chat() {
   const sendMessage = () => {
     if (message.trim()) {
       const newMessage = {
-        name: TheatorUser.name || "Anonymous",
-        email: TheatorUser.email || "random@123gmail.com",
+        name: TheatorUser?.name || "Anonymous",
+        email: TheatorUser?.email || "random@123gmail.com",
         profilePicture: TheatorUser.profilePicture,
         text: message,
         time: new Date().toLocaleTimeString(),
@@ -81,7 +81,7 @@ function Chat() {
             }`}
           >
             {/* Profile icon positioned based on message alignment */}
-            {msg.email !== TheatorUser.email && (
+            {msg?.email !== TheatorUser?.email && (
               <img
                 src={msg?.profilePicture}
                 alt="profile"
@@ -91,19 +91,19 @@ function Chat() {
             )}
             <div
               className={`${
-                msg.email === TheatorUser.email
+                msg?.email === TheatorUser?.email
                   ? "bg-violet-400 text-white"
                   : "bg-gray-200 text-black"
               } p-2 rounded-md max-w-xs`}
             >
               <div className="font-semibold">
-                {msg.email === TheatorUser.email ? "You" : msg.name}
+                {msg?.email === TheatorUser?.email ? "You" : msg?.name}
               </div>
               <div className="text-sm">{msg.text}</div>
               <div className="text-xs text-gray-500">{msg.time}</div>
             </div>
             {/* Profile icon for the current user's message */}
-            {msg.email === TheatorUser.email && (
+            {msg?.email === TheatorUser?.email && (
               <img
                 src={msg?.profilePicture}
                 alt="profile"

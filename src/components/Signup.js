@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useSignup } from "../hooks/useSignup";
@@ -7,6 +7,10 @@ import { BeatLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
 import { NODE_API_ENDPOINT } from "../utils/utils";
+import { GoogleLogin } from "@react-oauth/google";
+import { useAppContext } from "../Contexts/AppContext";
+import { useAuthcontext } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const override = css`
   display: block;
@@ -17,8 +21,48 @@ const override = css`
 const Signup = () => {
   const { signup, isLoadingS, errorS } = useSignup();
 
+  const { setRoom } = useAppContext();
+  const { dispatch } = useAuthcontext();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const handleGoogleSignup = () => {
     window.open(`${NODE_API_ENDPOINT}/api/googleAuth/auth/google`, "_self"); // Redirect to your Google Auth route
+  };
+
+  const loginFromGoogle = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/api/googleAuth/callback-login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: credentialResponse.credential }),
+        }
+      );
+
+      if (!response.ok) {
+        toast.error("Failed to login with Google. Please try again.");
+        setLoading(false);
+        return;
+      }
+      const json = await response.json();
+      console.log(json);
+
+      localStorage.setItem("TheatorUser", JSON.stringify(json));
+
+      toast.success("Welcome to Theator");
+      // update the auth context
+      dispatch({ type: "LOGIN", payload: json });
+      setRoom(json.room);
+
+      setLoading(false);
+      navigate("/");
+    } catch (error) {
+      setLoading(false);
+      toast.error("Failed to login with Google. Please try again.");
+    }
   };
 
   return (
@@ -234,7 +278,7 @@ const Signup = () => {
             <button className="bg-red-500 text-white p-2 rounded-full focus:outline-none">
               <FaGoogle onClick={handleGoogleSignup} />
             </button> */}
-          <button
+          {/* <button
             class="w-full px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150"
             onClick={handleGoogleSignup}
           >
@@ -245,7 +289,33 @@ const Signup = () => {
               alt="google logo"
             />
             <span className="text-center">Log in with Google</span>
-          </button>{" "}
+          </button>{" "} */}
+          <div
+            className="border-spacing-1 w-screen flex justify-center h-8 items-center"
+            style={{
+              backgroundColor: `${loading && "rgba(0, 0, 0, 0.5)"}`,
+              borderRadius: "10px",
+            }} // Adding a background color with some padding
+          >
+            {loading ? (
+              <BeatLoader
+                color="#ffffff"
+                loading={true}
+                css={override}
+                size={10}
+              />
+            ) : (
+              <GoogleLogin
+                width={500}
+                onSuccess={loginFromGoogle}
+                onError={(error) => {
+                  console.log("Login Failed", error);
+                  toast.error("Login Failed");
+                }}
+                useOneTap
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

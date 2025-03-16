@@ -4,10 +4,20 @@ import axios from "axios";
 import { useAuthcontext } from "../Contexts/AuthContext";
 import { useAppContext } from "../Contexts/AppContext";
 import { NODE_API_ENDPOINT } from "../utils/utils";
+import { BeatLoader } from "react-spinners";
+import { css } from "@emotion/react";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 const AlertForm = ({ onClose }) => {
   const [inputValue, setInputValue] = useState("");
   const { room, setRoom } = useAppContext();
+
+  const [loader, setLoader] = useState(false);
 
   const { TheatorUser } = useAuthcontext();
 
@@ -54,6 +64,7 @@ const AlertForm = ({ onClose }) => {
   const NewRoomCode = async () => {
     console.log(TheatorUser.name);
     const newCode = generateRoomCode();
+    setLoader(true);
     axios
       .post(
         `${NODE_API_ENDPOINT}/api/room/update`,
@@ -74,9 +85,11 @@ const AlertForm = ({ onClose }) => {
         localStorage.setItem("TheatorUser", JSON.stringify(newUser));
         setRoom(newCode);
         onClose();
+        setLoader(false);
       })
       .catch((er) => {
         console.log(er);
+        setLoader(false);
       });
   };
 
@@ -89,11 +102,22 @@ const AlertForm = ({ onClose }) => {
             <h2 className="text-xl sm:text-2xl font-bold mb-4">
               Hay! Join Room
             </h2>
+
             <button
+              disabled={loader}
               onClick={NewRoomCode}
-              className="hover:text-gray-300 bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="hover:text-gray-300 bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium w-50"
             >
-              Create New Room
+              {loader ? (
+                <BeatLoader
+                  color="#ffffff"
+                  loading={true}
+                  css={override}
+                  size={8}
+                />
+              ) : (
+                "Create New Room"
+              )}
             </button>
           </div>
 

@@ -7,11 +7,13 @@ import toast from "react-hot-toast";
 const YouTubeVideoCard = ({ video }) => {
   const navigate = useNavigate();
   const { TheatorUser } = useAuthcontext();
-  const { room } = useAppContext();
+
+  const { room, setRoom, videoId, setVideoId } = useAppContext();
 
   const playHandle = () => {
     console.log(room);
     if (room) {
+      setVideoId(video?.id?.videoId);
       navigate(`/video/${video?.id?.videoId}/${room}`);
       return;
     } else if (!TheatorUser) {

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const PlayByLinkForm = ({ onClose }) => {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
-  const { room, setRoom } = useAppContext();
+  const { room, setRoom, videoId, setVideoId } = useAppContext();
 
   const { TheatorUser } = useAuthcontext();
 
@@ -27,13 +27,14 @@ const PlayByLinkForm = ({ onClose }) => {
       return;
     }
 
-    const videoId = extractYouTubeVideoId(inputValue);
-    if (videoId === null) {
+    const FetchvideoId = extractYouTubeVideoId(inputValue);
+    if (FetchvideoId === null) {
       toast.error("Please enter valid link");
       return;
     }
-    console.log(videoId, TheatorUser?.name);
-    navigate(`/video/${videoId}/${room}`);
+    console.log(FetchvideoId, TheatorUser?.name);
+    navigate(`/video/${FetchvideoId}/${room}`);
+    setVideoId(FetchvideoId);
     // Close the alert form
     onClose();
   };

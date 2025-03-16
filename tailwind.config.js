@@ -2,7 +2,12 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        nl: "1080px", // custom large breakpoint
+        nh: "1132px", // custom large breakpoint
+      },
+    },
   },
   plugins: [],
 };
