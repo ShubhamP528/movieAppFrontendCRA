@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLogout } from "../hooks/useLogout";
 import { useAuthcontext } from "../Contexts/AuthContext";
@@ -22,29 +22,99 @@ const Navbar = () => {
   const [onlineUsers, setOnlineUsers] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [showLinkForm, setShowLinkForm] = useState(false);
-  const { room, setRoom, videoId, setVideoId } = useAppContext();
+  const { room, setRoom, videoId, setVideoId, setType, type } = useAppContext();
+  const [showSessionOptions, setShowSessionOptions] = useState(false);
+
+  const sessionRef = useRef(null);
 
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sessionRef.current && !sessionRef.current.contains(event.target)) {
+        setShowSessionOptions(false);
+      }
+    };
+
+    if (showSessionOptions) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSessionOptions]);
+
+  const handleSessionChange = async (type) => {
+    try {
+      const res = await axios.post(
+        `${NODE_API_ENDPOINT}/api/room/update-session`,
+        { sessionType: type },
+        {
+          headers: {
+            Authorization: `Bearer ${TheatorUser?.token}`,
+          },
+        }
+      );
+      setType(type);
+      if (type === "manual") {
+        socket.emit("sessions-leave", { sessionId: room });
+        socket.emit("manualSessions-joinRoom", { room });
+      } else if (type === "youTube") {
+        socket.emit("manualSessions-leave", { sessionId: room });
+        socket.emit("joinRoom", { room });
+      }
+
+      toast.success(`Session changed to ${type}`);
+      setShowSessionOptions(false); // Close the dropdown/modal
+    } catch (error) {
+      toast.error("Failed to change session");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    let intervalId;
     // Emit the totalUsers event initially
-    socket.emit("totalUsers", { room });
+    if (type === "youTube") {
+      socket.emit("totalUsers", { room });
+
+      intervalId = setInterval(() => {
+        socket.emit("totalUsers", { room });
+      }, 1000); // 1 seconds
+
+      // Listen for the totalUsers-ans event
+      socket.on("totalUsers-ans", (data) => {
+        setOnlineUsers(data);
+      });
+    } else {
+      socket.emit("manualSessions-totalUsers", { room });
+
+      intervalId = setInterval(() => {
+        console.log("calling get user");
+        socket.emit("manualSessions-totalUsers", { room });
+      }, 1000); // 1 seconds
+
+      // Listen for the totalUsers-ans event
+      socket.on("manualSessions-totalUsers-ans", (data) => {
+        setOnlineUsers(data);
+      });
+    }
 
     // Set up a 30-second interval to emit the event
-    const intervalId = setInterval(() => {
-      socket.emit("totalUsers", { room });
-    }, 1000); // 1 seconds
-
-    // Listen for the totalUsers-ans event
-    socket.on("totalUsers-ans", (data) => {
-      setOnlineUsers(data);
-    });
 
     // Clean up the interval and socket listeners when the component unmounts or room changes
     return () => {
       clearInterval(intervalId); // Clear the interval
-      socket.off("totalUsers"); // Remove socket listener for totalUsers
-      socket.off("totalUsers-ans"); // Remove socket listener for totalUsers-ans
+      if (type === "youTube") {
+        socket.off("totalUsers"); // Remove socket listener for totalUsers
+        socket.off("totalUsers-ans"); // Remove socket listener for totalUsers-ans
+      } else {
+        socket.off("manualSessions-totalUsers"); // Remove socket listener for totalUsers
+        socket.off("manualSessions-totalUsers-ans"); // Remove socket listener for totalUsers-ans
+      }
     };
-  }, [room]); // Re-run when the room changes
+  }, [room, type]); // Re-run when the room changes
 
   useEffect(() => {
     // Listen for incoming messages
@@ -78,38 +148,72 @@ const Navbar = () => {
 
   const getInRoom = async () => {
     if (room) {
-      try {
-        const data = await axios.post(
-          `${NODE_API_ENDPOINT}/api/getVideoId`,
-          {
-            room: room,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${TheatorUser?.token}`,
+      if (type === "youTube") {
+        try {
+          const data = await axios.post(
+            `${NODE_API_ENDPOINT}/api/getVideoId`,
+            {
+              room: room,
             },
+            {
+              headers: {
+                Authorization: `Bearer ${TheatorUser?.token}`,
+              },
+            }
+          );
+          console.log(data.data);
+          if (data?.data?.videoId === "not available") {
+            toast.error("Play video first");
           }
-        );
-        console.log(data.data);
-        if (data?.data?.videoId === "not available") {
-          toast.error("Play video first");
+          if (data?.data?.videoId !== "not available" && data?.data?.videoId) {
+            setVideoId(data?.data?.videoId);
+            navigate(`/video/${data?.data?.videoId}/${room}`);
+          }
+        } catch (err) {
+          toast.error(err?.response?.data?.message + " First Play Video");
+          console.log(err);
         }
-        if (data?.data?.videoId !== "not available" && data?.data?.videoId) {
-          setVideoId(data?.data?.videoId);
-          navigate(`/video/${data?.data?.videoId}/${room}`);
+      } else {
+        try {
+          const data = await axios.post(
+            `${NODE_API_ENDPOINT}/api/manualSessions/getVideoId`,
+            {
+              room: room,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${TheatorUser?.token}`,
+              },
+            }
+          );
+          console.log(data.data);
+          if (data?.data?.videoId === "not available") {
+            toast.error("Play video first");
+          }
+          if (data?.data?.videoId !== "not available" && data?.data?.videoId) {
+            setVideoId(data?.data?.videoId);
+            navigate(`/manualVideo/${data?.data?.videoId}/${room}`);
+          }
+        } catch (err) {
+          toast.error(err?.response?.data?.message + " First Play Video");
+          console.log(err);
         }
-      } catch (err) {
-        toast.error(err?.response?.data?.message + " First Play Video");
-        console.log(err);
       }
     }
   };
+
+  useEffect(() => {
+    if (TheatorUser?.room) {
+      setRoom(TheatorUser?.room);
+      setType(TheatorUser?.sessionType);
+    }
+  }, [TheatorUser?.room, TheatorUser?.sessionType, setRoom, setType]);
 
   return (
     <nav className="bg-gray-800">
       {showAlert && <AlertForm onClose={handleCloseAlert} />}
       {showLinkForm && <PlayByLinkForm onClose={handleCloseLinkForm} />}
-      <div className="max-w-7xl mx-auto px-4 sm:px-2 lg:px-4 max-[1088px]:text-xs nl:text-sm nh:text-sm">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-2 lg:px-4 max-[1088px]:text-xs nl:text-sm nh:text-sm">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -136,7 +240,7 @@ const Navbar = () => {
                   About
                 </Link>
                 <Link
-                  to="/theator"
+                  to={`/${type === "youTube" ? "theator" : "manualVideList"}`}
                   className="text-gray-300 hover:bg-gray-700 hover:text-white nh:px-2 xl:px-3 lg:px-0 py-2 rounded-md text-sm font-medium"
                 >
                   Theator
@@ -153,12 +257,14 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center space-x-4">
             {TheatorUser ? (
               <>
-                <button
-                  className="text-nowrap bg-blue-500 text-white md:px-2 md:py-1 px-3 py-2 rounded hover:bg-blue-600 transition duration-300"
-                  onClick={handleLinkForm}
-                >
-                  Play by link
-                </button>
+                {type === "youTube" && (
+                  <button
+                    className="text-nowrap bg-blue-500 text-white md:px-2 md:py-1 px-3 py-2 rounded hover:bg-blue-600 transition duration-300"
+                    onClick={handleLinkForm}
+                  >
+                    Play by link
+                  </button>
+                )}
                 {/* {showLinkForm && (
                   <PlayByLinkForm onClose={handleCloseLinkForm} />
                 )} */}
@@ -190,6 +296,35 @@ const Navbar = () => {
                 >
                   Logout
                 </button>
+
+                <div className="relative" ref={sessionRef}>
+                  <button
+                    onClick={() => setShowSessionOptions(!showSessionOptions)}
+                    className="bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600 transition duration-300"
+                  >
+                    Change Session
+                  </button>
+                  {showSessionOptions && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
+                      <button
+                        onClick={() => handleSessionChange("youTube")}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                          type === "youTube" ? "bg-gray-200 font-semibold" : ""
+                        }`}
+                      >
+                        YouTube {type === "youTube" && "✓"}
+                      </button>
+                      <button
+                        onClick={() => handleSessionChange("manual")}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                          type === "manual" ? "bg-gray-200 font-semibold" : ""
+                        }`}
+                      >
+                        Manual {type === "manual" && "✓"}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <>
@@ -283,15 +418,18 @@ const Navbar = () => {
           </Link>
           {TheatorUser ? (
             <>
-              <button
-                className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition duration-300 mx-1"
-                onClick={() => {
-                  handleLinkForm();
-                  setIsOpen(false); // Close the menu after clicking the button
-                }}
-              >
-                Play by link
-              </button>
+              {type === "youTube" && (
+                <button
+                  className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition duration-300 mx-1"
+                  onClick={() => {
+                    handleLinkForm();
+                    setIsOpen(false); // Close the menu after clicking the button
+                  }}
+                >
+                  Play by link
+                </button>
+              )}
+
               <span className="block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">
                 Welcome, {TheatorUser.name}!
               </span>
@@ -328,6 +466,41 @@ const Navbar = () => {
               >
                 Logout
               </button>
+
+              <div className="px-3 py-2">
+                <button
+                  onClick={() => setShowSessionOptions(!showSessionOptions)}
+                  className="w-full bg-purple-500 text-white px-3 py-2 rounded hover:bg-purple-600 transition duration-300"
+                >
+                  Change Session
+                </button>
+                {showSessionOptions && (
+                  <div className="mt-2 bg-white border rounded shadow-md">
+                    <button
+                      onClick={() => {
+                        handleSessionChange("youTube");
+                        setIsOpen(false);
+                      }}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                        type === "youTube" ? "bg-gray-200 font-semibold" : ""
+                      }`}
+                    >
+                      YouTube {type === "youTube" && "✓"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleSessionChange("manual");
+                        setIsOpen(false);
+                      }}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                        type === "manual" ? "bg-gray-200 font-semibold" : ""
+                      }`}
+                    >
+                      Manual {type === "manual" && "✓"}
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <>

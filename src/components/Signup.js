@@ -11,6 +11,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useAppContext } from "../Contexts/AppContext";
 import { useAuthcontext } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import socket from "../connection";
 
 const override = css`
   display: block;
@@ -21,7 +22,7 @@ const override = css`
 const Signup = () => {
   const { signup, isLoadingS, errorS } = useSignup();
 
-  const { setRoom } = useAppContext();
+  const { setRoom, setType } = useAppContext();
   const { dispatch } = useAuthcontext();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -56,6 +57,17 @@ const Signup = () => {
       // update the auth context
       dispatch({ type: "LOGIN", payload: json });
       setRoom(json.room);
+      setType(json.sessionType);
+
+      if (json.sessionType === "youTube") {
+        if (json?.room) {
+          socket.emit("joinRoom", { room: json?.room });
+        }
+      } else {
+        if (json?.room) {
+          socket.emit("manualSessions-joinRoom", { room: json?.room });
+        }
+      }
 
       setLoading(false);
       navigate("/");

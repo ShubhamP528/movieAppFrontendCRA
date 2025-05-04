@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAppContext } from "../Contexts/AppContext";
 import { NODE_API_ENDPOINT } from "../utils/utils";
+import socket from "../connection";
 
 export const useSignin = () => {
   const [errorL, setErrorL] = useState(null);
   const [isLoadingL, setIsLoadingL] = useState(null);
   const { dispatch } = useAuthcontext();
-  const { setRoom } = useAppContext();
+  const { setRoom, setType } = useAppContext();
 
   const navigate = useNavigate();
 
@@ -40,6 +41,17 @@ export const useSignin = () => {
         // update the auth context
         dispatch({ type: "LOGIN", payload: json });
         setRoom(json.room);
+        setType(json.sessionType);
+
+        if (json.sessionType === "youTube") {
+          if (json?.room) {
+            socket.emit("joinRoom", { room: json?.room });
+          }
+        } else {
+          if (json?.room) {
+            socket.emit("manualSessions-joinRoom", { room: json?.room });
+          }
+        }
 
         setIsLoadingL(false);
         navigate("/");

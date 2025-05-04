@@ -3,29 +3,46 @@ import { useParams } from "react-router-dom";
 import socket from "../connection"; // Import the central socket instance
 import { useAuthcontext } from "../Contexts/AuthContext";
 import toast from "react-hot-toast";
+import { useAppContext } from "../Contexts/AppContext";
 
 function Chat() {
   const { room } = useParams();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const { TheatorUser } = useAuthcontext();
+  const { type } = useAppContext();
 
   // Create a reference for the chat messages container
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Listen for incoming messages
-    socket.on("receiveMessage", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
-      if (TheatorUser?.email !== msg?.email) {
-        // toast.success(`${msg.name}: ${msg.text}`);
-      }
-    });
+    if (type === "manual") {
+      // Listen for incoming messages
+      socket.on("manualSessions-receiveMessage", (msg) => {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+        if (TheatorUser?.email !== msg?.email) {
+          // toast.success(`${msg.name}: ${msg.text}`);
+        }
+      });
 
-    // Cleanup on component unmount
-    return () => {
-      socket.off("receiveMessage");
-    };
+      // Cleanup on component unmount
+      return () => {
+        socket.off("manualSessions-receiveMessage");
+      };
+    } else {
+      // Listen for incoming messages
+      socket.on("receiveMessage", (msg) => {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+        if (TheatorUser?.email !== msg?.email) {
+          // toast.success(`${msg.name}: ${msg.text}`);
+        }
+      });
+
+      // Cleanup on component unmount
+      return () => {
+        socket.off("receiveMessage");
+      };
+    }
   }, [TheatorUser?.email, TheatorUser?.name]);
 
   // Scroll to the bottom of the chat messages container when messages are updated
@@ -45,9 +62,16 @@ function Chat() {
         text: message,
         time: new Date().toLocaleTimeString(),
       };
-
-      // Emit the message to the server
-      socket.emit("chatMessage", { room, message: newMessage });
+      if (type === "manual") {
+        // Emit the message to the server
+        socket.emit("manualSessions-chatMessage", {
+          room,
+          message: newMessage,
+        });
+      } else {
+        // Emit the message to the server
+        socket.emit("chatMessage", { room, message: newMessage });
+      }
 
       // Clear the input field
       setMessage("");

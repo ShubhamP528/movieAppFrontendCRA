@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { NODE_API_ENDPOINT } from "../utils/utils";
+import socket from "../connection";
 export const AuthContext = createContext();
 
 const authReducer = (state, action) => {
@@ -28,15 +29,43 @@ export const AuthContextProvider = ({ children }) => {
       try {
         const user = JSON.parse(localStorage.getItem("TheatorUser"));
         console.log(user);
-        if (!user.token) throw new Error("No token found");
+        if (
+          user?.message === "jwt expired" ||
+          user?.message === "jwt malformed"
+        ) {
+          localStorage.removeItem("TheatorUser");
+          dispatch({ type: "LOGOUT" });
+          return;
+        }
+        if (!user) throw new Error("No token found");
         await fetch(`${NODE_API_ENDPOINT}/api/auth/verify`, {
           method: "POST",
           headers: { Authorization: `Bearer ${user?.token}` },
         })
           .then((res) => res.json())
           .then((data) => {
+            console.log(data);
+            if (data?.message === "jwt expired") {
+              localStorage.removeItem("TheatorUser");
+              dispatch({ type: "LOGOUT" });
+              return;
+            }
             localStorage.setItem("TheatorUser", JSON.stringify(data));
             dispatch({ type: "LOGIN", payload: data });
+
+            console.log(data);
+            console.log(data?.sessionType);
+
+            if (data?.sessionType === "youTube") {
+              console.log("calling for YT");
+              if (data?.room) {
+                socket.emit("joinRoom", { room: data?.room });
+              }
+            } else {
+              if (data?.room) {
+                socket.emit("manualSessions-joinRoom", { room: data?.room });
+              }
+            }
           })
           .catch((error) => {
             console.log(error);

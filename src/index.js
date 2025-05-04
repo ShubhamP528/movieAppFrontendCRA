@@ -17,6 +17,8 @@ import Theator from "./components/Theator";
 import Ytplayer from "./components/Ytplayer";
 import TermsAndConditions from "./components/TermAndCondition";
 import PrivacyPolicy from "./components/PrivacyPolicy";
+import ManualVideo from "./components/ManualVideo";
+import ManualVideoList from "./components/ManualVideList";
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
@@ -67,6 +69,14 @@ const appRouter = createBrowserRouter([
       {
         path: "video/:id/:room",
         element: <Ytplayer />,
+      },
+      {
+        path: "/manualVideList",
+        element: <ManualVideoList />,
+      },
+      {
+        path: "/manualVideo/:id/:room",
+        element: <ManualVideo />,
       },
     ],
   },

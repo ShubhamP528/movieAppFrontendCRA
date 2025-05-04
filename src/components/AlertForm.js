@@ -6,6 +6,7 @@ import { useAppContext } from "../Contexts/AppContext";
 import { NODE_API_ENDPOINT } from "../utils/utils";
 import { BeatLoader } from "react-spinners";
 import { css } from "@emotion/react";
+import socket from "../connection";
 
 const override = css`
   display: block;
@@ -15,7 +16,7 @@ const override = css`
 
 const AlertForm = ({ onClose }) => {
   const [inputValue, setInputValue] = useState("");
-  const { room, setRoom } = useAppContext();
+  const { room, setRoom, type } = useAppContext();
 
   const [loader, setLoader] = useState(false);
 
@@ -52,6 +53,15 @@ const AlertForm = ({ onClose }) => {
         console.log(newUser);
         localStorage.setItem("TheatorUser", JSON.stringify(newUser));
         setRoom(newCode);
+
+        if (type === "manual") {
+          socket.emit("manualSessions-leave", { sessionId: room });
+          socket.emit("manualSessions-joinRoom", { room });
+        } else if (type === "youTube") {
+          socket.emit("sessions-leave", { sessionId: room });
+          socket.emit("joinRoom", { room });
+        }
+
         onClose();
       })
       .catch((er) => {

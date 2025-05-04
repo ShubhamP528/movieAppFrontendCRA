@@ -1,20 +1,22 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import socket from "../connection";
+import { createContext, useContext, useState } from "react";
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
   const [room, setRoom] = useState("");
   const [videoId, setVideoId] = useState("");
   const [users, setUsers] = useState("");
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("TheatorUser"));
-    if (user?.room) {
-      setRoom(user?.room);
-      socket.emit("joinRoom", { room: user?.room });
-    }
-  }, [room]);
+  const [type, setType] = useState("");
 
-  const value = { room, setRoom, videoId, setVideoId, users, setUsers };
+  const value = {
+    room,
+    setRoom,
+    videoId,
+    setVideoId,
+    users,
+    setUsers,
+    type,
+    setType,
+  };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
