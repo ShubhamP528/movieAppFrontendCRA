@@ -29,23 +29,44 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (sessionRef.current && !sessionRef.current.contains(event.target)) {
+      if (
+        window.innerWidth >= 1024 && // Only run on desktop
+        sessionRef.current &&
+        !sessionRef.current.contains(event.target)
+      ) {
         setShowSessionOptions(false);
       }
     };
 
-    if (showSessionOptions) {
+    if (window.innerWidth >= 1024) {
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showSessionOptions]);
+  }, [sessionRef]);
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (sessionRef.current && !sessionRef.current.contains(event.target)) {
+  //       setShowSessionOptions(false);
+  //     }
+  //   };
+
+  //   if (showSessionOptions) {
+  //     document.addEventListener("mousedown", handleClickOutside);
+  //   } else {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   }
+
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [showSessionOptions]);
 
   const handleSessionChange = async (type) => {
+    console.log(type);
     try {
       const res = await axios.post(
         `${NODE_API_ENDPOINT}/api/room/update-session`,
@@ -71,6 +92,7 @@ const Navbar = () => {
       toast.error("Failed to change session");
       console.error(error);
     }
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -91,7 +113,7 @@ const Navbar = () => {
       socket.emit("manualSessions-totalUsers", { room });
 
       intervalId = setInterval(() => {
-        console.log("calling get user");
+        // console.log("calling get user");
         socket.emit("manualSessions-totalUsers", { room });
       }, 1000); // 1 seconds
 
@@ -469,17 +491,26 @@ const Navbar = () => {
 
               <div className="px-3 py-2">
                 <button
-                  onClick={() => setShowSessionOptions(!showSessionOptions)}
+                  onClick={() => {
+                    setShowSessionOptions(!showSessionOptions);
+                    console.log("Dialog open");
+                    console.log(showSessionOptions);
+                  }}
                   className="w-full bg-purple-500 text-white px-3 py-2 rounded hover:bg-purple-600 transition duration-300"
                 >
                   Change Session
                 </button>
                 {showSessionOptions && (
-                  <div className="mt-2 bg-white border rounded shadow-md">
+                  <div
+                    className="mt-5 bg-white border rounded shadow-md z-10"
+                    onClick={() => {
+                      console.log("helo");
+                    }}
+                  >
                     <button
                       onClick={() => {
                         handleSessionChange("youTube");
-                        setIsOpen(false);
+                        console.log("Hello");
                       }}
                       className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
                         type === "youTube" ? "bg-gray-200 font-semibold" : ""
@@ -490,7 +521,6 @@ const Navbar = () => {
                     <button
                       onClick={() => {
                         handleSessionChange("manual");
-                        setIsOpen(false);
                       }}
                       className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
                         type === "manual" ? "bg-gray-200 font-semibold" : ""
