@@ -425,7 +425,7 @@ const Navbar = () => {
             About
           </Link>
           <Link
-            to="/theator"
+            to={`/${type === "youTube" ? "theator" : "manualVideList"}`}
             onClick={() => setIsOpen(false)} // Close the menu
             className="block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
           >
