@@ -5,15 +5,19 @@ import { useAppContext } from "../Contexts/AppContext";
 import toast from "react-hot-toast";
 
 const videos = [
+  // {
+  //   videoId: "lcew8idffea1ye8akdog",
+  //   title: "Tohre Me Base Raja Humro Paranwa Ho Swati Mishra Bhojpuri",
+  // },
+  // { videoId: "nb4zntsdoke0ohjyzq99", title: "Maroon Color Sadiya" },
+  // { videoId: "pvrtwkpkd7cqpsol4bk9", title: "Aayi Nai -Stree 2" },
+  // {
+  //   videoId: "l4qgcxjmoccox0vf5fpi",
+  //   title: "Vaaste Song Dhvani Bhanushali Tanishk Bagchi",
+  // },
   {
-    videoId: "lcew8idffea1ye8akdog",
-    title: "Tohre Me Base Raja Humro Paranwa Ho Swati Mishra Bhojpuri",
-  },
-  { videoId: "nb4zntsdoke0ohjyzq99", title: "Maroon Color Sadiya" },
-  { videoId: "pvrtwkpkd7cqpsol4bk9", title: "Aayi Nai -Stree 2" },
-  {
-    videoId: "l4qgcxjmoccox0vf5fpi",
-    title: "Vaaste Song Dhvani Bhanushali Tanishk Bagchi",
+    videoId: "Saiyaara.2025.480p.V2.HDTC.Hindi.ORG.x264-HDHub4u.Ms_aylmxo",
+    title: "Saiyaara Full Movie",
   },
 ];
 
