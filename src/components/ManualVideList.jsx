@@ -16,8 +16,9 @@ const videos = [
   //   title: "Vaaste Song Dhvani Bhanushali Tanishk Bagchi",
   // },
   {
-    videoId: "Saiyaara.2025.480p.V2.HDTC.Hindi.ORG.x264-HDHub4u.Ms_aylmxo",
-    title: "Saiyaara Full Movie",
+    videoId:
+      "Chennai.Express.2013.480p.Bluray.Hindi.AAC5.1.x264.Esub-HDHub4u.Tv_evtwwg",
+    title: "Chennai Express Full Movie",
   },
 ];
 
