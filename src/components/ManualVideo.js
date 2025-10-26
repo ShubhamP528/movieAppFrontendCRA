@@ -221,7 +221,7 @@ function ManualVideo() {
           ref={playerRef}
           // url={`https://res.cloudinary.com/dgsjppp4a/video/upload/v1745656570/Shubham/${videoId}.mp4`}
           // url={`https://res.cloudinary.com/dyuov6i8c/video/upload/v1753409201/${videoId}.mp4`}
-          url="https://res.cloudinary.com/dyuov6i8c/video/upload/Chennai.Express.2013.480p.Bluray.Hindi.AAC5.1.x264.Esub-HDHub4u.Tv_evtwwg.mp4"
+          url="https://res.cloudinary.com/dyuov6i8c/video/upload/f_auto,q_auto/v1761475596/Ek.Deewane.ki.Deewaniyat.2025.HQ-V2.480p.HDTC.Hindi-Line.x264-HDHub4u.Ms_yzfjhn.mp4"
           playing={playing}
           volume={volume}
           muted={muted}
