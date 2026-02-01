@@ -221,7 +221,8 @@ function ManualVideo() {
           ref={playerRef}
           // url={`https://res.cloudinary.com/dgsjppp4a/video/upload/v1745656570/Shubham/${videoId}.mp4`}
           // url={`https://res.cloudinary.com/dyuov6i8c/video/upload/v1753409201/${videoId}.mp4`}
-          url="https://res.cloudinary.com/dyuov6i8c/video/upload/f_auto,q_auto/v1761475596/Dhurandhar.2025.720p.HEVC.V2.HDTC.Hindi-LiNE.x265-HDHub4u.Ms_pgu7pv.mp4"
+          // url="https://res.cloudinary.com/dyuov6i8c/video/upload/f_auto,q_auto/v1761475596/Dhurandhar.2025.720p.HEVC.V2.HDTC.Hindi-LiNE.x265-HDHub4u.Ms_pgu7pv.mp4"
+          url="https://angelina-unintrusive-nonestimably.ngrok-free.dev/videos/movie.mp4"
           playing={playing}
           volume={volume}
           muted={muted}
